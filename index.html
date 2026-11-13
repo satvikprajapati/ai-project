@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Productivity & Arcade Suite | Portfolio</title>
+    <style>
+        :root {
+            --bg-color: #0b0f19;
+            --card-bg: #111827;
+            --card-border: #1f2937;
+            --accent-blue: #3b82f6;
+            --accent-hover: #2563eb;
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+            --stock-cyan: #06b6d4;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 12px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--accent-blue);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        nav {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            padding: 7px 11px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover, .nav-btn.active {
+            color: var(--text-main);
+            background-color: #1f2937;
+        }
+
+        main {
+            flex: 1;
+            max-width: 950px;
+            width: 100%;
+            margin: 25px auto;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        .view-section {
+            display: none;
+        }
+
+        .view-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .hero h1 {
+            font-size: 28px;
+            margin: 0 0 10px 0;
+            color: var(--text-main);
+        }
+
+        .hero p {
+            font-size: 15px;
+            color: var(--text-muted);
+            max-width: 650px;
+            margin: 0 auto 15px auto;
+            line-height: 1.5;
+        }
+
+        .badge-container {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: #1f2937;
+            color: var(--accent-blue);
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 20px;
+            border: 1px solid #374151;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .dash-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .dash-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+        }
+
+        .dash-card h3 {
+            margin: 0 0 8px 0;
+            font-size: 17px;
+            color: var(--text-main);
+        }
+
+        .dash-card p {
+            margin: 0 0 12px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .card-link {
+            color: var(--accent-blue);
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .app-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+
+        .app-box h2 {
+            margin-top: 0;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--card-border);
+            padding-bottom: 12px;
+            font-size: 22px;
+        }
+
+        textarea, select, input[type="text"], input[type="range"] {
+            width: 100%;
+            background-color: #0b0f19;
+            color: var(--text-main);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        textarea { height: 110px; resize: vertical; }
+
+        .btn {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-right: 8px;
+            margin-bottom: 10px;
+        }
+
+        .btn:hover { background-color: var(--accent-hover); }
+        .btn-success { background-color: var(--success); }
+        .btn-success:hover { background-color: #059669; }
+        .btn-danger { background-color: var(--danger); }
+        .btn-danger:hover { background-color: #dc2626; }
+        .btn-purple { background-color: var(--purple); }
+        .btn-purple:hover { background-color: #7c3aed; }
+        .btn-cyan { background-color: var(--stock-cyan); color: #000; }
+        .btn-cyan:hover { background-color: #0891b2; color: #fff; }
+
+        .card-item {
+            background-color: #0b0f19;
+            border: 1px solid var(--card-border);
+            border-left: 4px solid var(--accent-blue);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+
+        .answer {
+            display: none;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--card-border);
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        .task-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+        }
+
+        .task-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .reflex-box {
+            width: 260px;
+            height: 260px;
+            background-color: #1f2937;
+            margin: 20px auto;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            border: 3px solid #374151;
+            transition: background-color 0.15s, transform 0.1s;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+
+        .reflex-box:active {
+            transform: scale(0.98);
+        }
+
+        #gameCanvas {
+            background-color: #1e293b;
+            border: 3px solid #374151;
+            border-radius: 10px;
+            display: block;
+            margin: 15px auto;
+            box-shadow: 0 0 20px rgba(0,0,0,0.6);
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #0b0f19;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid var(--card-border);
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .iq-option {
+            background-color: #0b0f19;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .iq-option:hover {
+            border-color: var(--purple);
+            background-color: #1f2937;
+        }
+
+        .iq-option.selected {
+            border-color: var(--purple);
+            background-color: rgba(139, 92, 246, 0.2);
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-top: 1px solid var(--card-border);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" onclick="switchView('homeView')">
+            <span>?</span> Tech Suite Pro
+        </div>
+        <nav>
+            <button class="nav-btn active" id="navHome" onclick="switchView('homeView')">Home</button>
+            <button class="nav-btn" id="navStock" onclick="switchView('stockView')">?? Stocks</button>
+            <button class="nav-btn" id="navIq" onclick="switchView('iqView')">?? IQ Test</button>
+            <button class="nav-btn" id="navQuiz" onclick="switchView('quizView')">?? Quiz</button>
+            <button class="nav-btn" id="navPlanner" onclick="switchView('plannerView')">??? Planner</button>
+            <button class="nav-btn" id="navReflex" onclick="switchView('reflexView')">? Reflex</button>
+            <button class="nav-btn" id="navRacer" onclick="switchView('racerView')">??? Racer</button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- HOME / DASHBOARD LANDING SCREEN -->
+        <div id="homeView" class="view-section active">
+            <div class="hero">
+                <h1>Student Productivity & Arcade Suite</h1>
+                <p>An advanced multi-module Web App engineered for academic revision, financial market tracking, cognitive IQ testing, and arcade gaming.</p>
+                <div class="badge-container">
+                    <span class="badge">??? Retro Highway Racer</span>
+                    <span class="badge">?? Live Stock Market</span>
+                    <span class="badge">?? IQ Assessment</span>
+                    <span class="badge">?? 100% Offline Capable</span>
+                </div>
+            </div>
+
+            <h2 style="font-size: 20px; margin-bottom: 15px; color: var(--text-main);">Project Modules</h2>
+            
+            <div class="dashboard-grid">
+                <div class="dash-card" onclick="switchView('stockView')">
+                    <h3>?? Real-World Stock Viewer</h3>
+                    <p>Track live market data, global tech giants, and Indian blue-chip financial charts.</p>
+                    <span class="card-link" style="color:var(--stock-cyan);">View Stocks &rarr;</span>
+                </div>
+
+                <div class="dash-card" onclick="switchView('iqView')">
+                    <h3>?? Logic & IQ Assessment</h3>
+                    <p>Evaluate pattern recognition, numerical series, and logical reasoning with 10 cognitive questions.</p>
+                    <span class="card-link" style="color: var(--purple);">Take Assessment &rarr;</span>
+                </div>
+
+                <div class="dash-card" onclick="switchView('quizView')">
+                    <h3>?? Quiz & Flashcard Generator</h3>
+                    <p>Instantly transform textbook notes into interactive flashcards and practice tests.</p>
+                    <span class="card-link">Open Generator &rarr;</span>
+                </div>
+
+                <div class="dash-card" onclick="switchView('plannerView')">
+                    <h3>??? Smart Study & Fitness Planner</h3>
+                    <p>Balance intensive academic sessions and sports routines with custom daily checklists.</p>
+                    <span class="card-link">Open Planner &rarr;</span>
+                </div>
+
+                <div class="dash-card" onclick="switchView('reflexView')">
+                    <h3>? Reflex & Reaction Trainer</h3>
+                    <p>Test reaction speed in milliseconds with true-random timing and millisecond grading.</p>
+                    <span class="card-link" style="color:var(--danger);">Start Test &rarr;</span>
+                </div>
+
+                <div class="dash-card" onclick="switchView('racerView')">
+                    <h3>??? Retro Highway Racer</h3>
+                    <p>Pro-mode arcade driving game featuring progressive speed and local high score tracking.</p>
+                    <span class="card-link" style="color:var(--warning);">Play Game &rarr;</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE: REAL WORLD STOCK VIEWER -->
+        <div id="stockView" class="view-section">
+            <div class="app-box">
+                <h2 style="color:var(--stock-cyan);">?? Real-World Stock & Market Viewer</h2>
+                <p style="color:var(--text-muted);">Select a company or stock index to view live market trends and trading charts:</p>
+
+                <div style="display:flex; gap:8px; margin-bottom:15px; flex-wrap:wrap;">
+                    <button class="btn btn-cyan" onclick="loadStock('NASDAQ:AAPL', 'Apple Inc.')">Apple (AAPL)</button>
+                    <button class="btn btn-cyan" onclick="loadStock('NASDAQ:GOOGL', 'Alphabet Inc.')">Google (GOOGL)</button>
+                    <button class="btn btn-cyan" onclick="loadStock('NASDAQ:TSLA', 'Tesla Inc.')">Tesla (TSLA)</button>
+                    <button class="btn btn-cyan" onclick="loadStock('NASDAQ:MSFT', 'Microsoft')">Microsoft (MSFT)</button>
+                    <button class="btn btn-cyan" onclick="loadStock('NASDAQ:AMZN', 'Amazon')">Amazon (AMZN)</button>
+                    <button class="btn btn-cyan" onclick="loadStock('BSE:RELIANCE', 'Reliance Industries')">Reliance</button>
+                    <button class="btn btn-cyan" onclick="loadStock('BSE:TATAMOTORS', 'Tata Motors')">Tata Motors</button>
+                    <button class="btn btn-cyan" onclick="loadStock('BSE:HDFCBANK', 'HDFC Bank')">HDFC Bank</button>
+                    <button class="btn btn-cyan" onclick="loadStock('BSE:INFY', 'Infosys')">Infosys</button>
+                </div>
+
+                <div id="stockWidgetContainer" style="height: 380px; background:#0b0f19; border:1px solid var(--card-border); border-radius:10px; overflow:hidden;">
+                    <iframe id="stockFrame" src="https://s.tradingview.com/widgetembed/?symbol=NASDAQ:AAPL&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=111827&theme=dark&style=1&timezone=Asia/Kolkata" style="width:100%; height:100%; border:none;"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE: IQ TESTER -->
+        <div id="iqView" class="view-section">
+            <div class="app-box">
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid var(--card-border); padding-bottom:12px;">
+                    <h2 style="margin:0; border:none; padding:0; color:var(--purple);">?? Cognitive Logic & IQ Trainer</h2>
+                    <span style="font-size:13px; color:var(--text-muted);">Best Score: <b id="bestIqScore" style="color:var(--warning);">0</b></span>
+                </div>
+
+                <div id="iqStartScreen" style="text-align:center; padding:30px 10px;">
+                    <p style="font-size:16px; color:var(--text-muted); max-width:500px; margin:0 auto 20px auto;">
+                        Evaluate logical reasoning, pattern identification, and numerical sequences with 10 high-school level challenges.
+                    </p>
+                    <button class="btn btn-purple" style="font-size:16px; padding:12px 28px;" onclick="startIqTest()">Start IQ Assessment</button>
+                </div>
+
+                <div id="iqTestScreen" style="display:none; margin-top:20px;">
+                    <div style="display:flex; justify-content:space-between; color:var(--text-muted); font-size:14px; margin-bottom:15px;">
+                        <span>Question <b id="iqQuestionNum">1</b> of 10</span>
+                        <span>Progress: <b id="iqProgress">10%</b></span>
+                    </div>
+
+                    <div id="iqQuestionBox" class="card-item" style="border-left-color: var(--purple); font-size:16px; font-weight:600; margin-bottom:20px;"></div>
+
+                    <div id="iqOptionsBox"></div>
+
+                    <div style="margin-top:20px; display:flex; justify-content:space-between;">
+                        <button class="btn" style="background:#374151;" onclick="switchView('homeView')">Exit Test</button>
+                        <button class="btn btn-purple" id="nextIqBtn" onclick="nextIqQuestion()" disabled>Next Question &rarr;</button>
+                    </div>
+                </div>
+
+                <div id="iqResultScreen" style="display:none; text-align:center; padding:20px 10px;">
+                    <h3 style="font-size:24px; margin-bottom:10px;" id="iqRankTitle">Category</h3>
+                    <div style="font-size:48px; font-weight:bold; color:var(--purple); margin-bottom:10px;" id="iqScoreDisplay">0 / 10</div>
+                    <p style="color:var(--text-muted); font-size:15px; max-width:500px; margin:0 auto 20px auto;" id="iqFeedbackText"></p>
+                    <button class="btn btn-purple" onclick="startIqTest()">Retake IQ Test</button>
+                    <button class="btn" style="background:#374151;" onclick="switchView('homeView')">Back to Home</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODULE: QUIZ & FLASHCARDS -->
+        <div id="quizView" class="view-section">
+            <div class="app-box">
+                <h2>?? AI Quiz & Flashcard Generator</h2>
+                <p style="color: var(--text-muted);">Paste study notes or textbook paragraphs below:</p>
+                <textarea id="quizNotes" placeholder="Paste study notes here..."></textarea>
+                
+                <button class="btn" onclick="generateCards()">Generate Flashcards</button>
+                <button class="btn btn-success" onclick="generateQuiz()">Generate Quiz</button>
+                <button class="btn" style="background:#374151;" onclick="switchView('homeView')">&larr; Back to Home</button>
+
+                <div id="quizOutput"></div>
+            </div>
+        </div>
+
+        <!-- MODULE: STUDY PLANNER -->
+        <div id="plannerView" class="view-section">
+            <div class="app-box">
+                <h2>??? Smart Study & Fitness Planner</h2>
+                <label style="font-weight: bold; display:block; margin-top:10px;">Primary Focus Area:</label>
+                <select id="planFocus">
+                    <option value="academics">Intensive Academics + Light Fitness</option>
+                    <option value="sports">Badminton / Sports Training + Studies</option>
+                    <option value="balanced">Balanced 50/50 Routine</option>
+                </select>
+
+                <label style="font-weight: bold; display:block; margin-top:10px;">Target Study Hours Today: <span id="studyVal" style="color: var(--accent-blue);">3</span> hrs</label>
+                <input type="range" id="studyHours" min="1" max="6" value="3" oninput="document.getElementById('studyVal').innerText = this.value">
+
+                <label style="font-weight: bold; display:block; margin-top:10px;">Sports / Fitness Time: <span id="sportVal" style="color: var(--accent-blue);">1.5</span> hrs</label>
+                <input type="range" id="sportHours" min="0.5" max="3" step="0.5" value="1.5" oninput="document.getElementById('sportVal').innerText = this.value">
+
+                <button class="btn btn-success" style="width: 100%; margin-top: 10px;" onclick="generateCustomPlan()">Generate Daily Routine</button>
+
+                <div id="plannerOutput"></div>
+            </div>
+        </div>
+
+        <!-- MODULE: REFLEX TRAINER -->
+        <div id="reflexView" class="view-section" style="text-align: center;">
+            <div class="app-box">
+                <h2 style="color:var(--danger);">? Reflex & Reaction Time Trainer</h2>
+                <p style="color: var(--text-muted);">Click "Start Focus Test", wait for the target to turn <b>GREEN</b>, and click it instantly!</p>
+                
+                <div style="margin-bottom: 15px;">
+                    <button class="btn btn-danger" onclick="startReflexGame()">Start Focus Test</button>
+                    <button class="btn" style="background:#374151;" onclick="switchView('homeView')">Home</button>
+                </div>
+                
+                <div id="reflexTarget" class="reflex-box" onclick="clickReflexTarget()">Press Start</div>
+                <div id="reflexResult" style="font-size: 18px; font-weight: bold; margin-top: 18px; min-height: 25px;"></div>
+            </div>
+        </div>
+
+        <!-- MODULE: HIGHWAY RACER -->
+        <div id="racerView" class="view-section" style="text-align: center;">
+            <div class="app-box">
+                <h2 style="color:var(--warning);">??? Retro Highway Racer: PRO MODE</h2>
+                <p style="color: var(--text-muted);">Use <b>Left & Right Arrow Keys</b> to steer. Speed increases as score rises!</p>
+                
+                <div class="stats-bar">
+                    <span>Score: <span id="scoreText">0</span></span>
+                    <span style="color: var(--warning);">?? High Score: <span id="highScoreText">0</span></span>
+                    <span style="color: var(--danger);">Speed: Level <span id="speedText">1</span></span>
+                </div>
+
+                <canvas id="gameCanvas" width="300" height="360"></canvas>
+                
+                <div style="margin-top: 12px;">
+                    <button class="btn btn-danger" onclick="restartRacer()">Restart Race</button>
+                    <button class="btn" style="background:#374151;" onclick="switchView('homeView')">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Developed by Satvik • High-Performance Web Application Suite
+    </footer>
+
+    <script>
+        // --- NAVIGATION CONTROLLER ---
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(viewId).classList.add('active');
+
+            if (viewId === 'homeView') document.getElementById('navHome').classList.add('active');
+            if (viewId === 'stockView') document.getElementById('navStock').classList.add('active');
+            if (viewId === 'iqView') document.getElementById('navIq').classList.add('active');
+            if (viewId === 'quizView') document.getElementById('navQuiz').classList.add('active');
+            if (viewId === 'plannerView') document.getElementById('navPlanner').classList.add('active');
+            if (viewId === 'reflexView') document.getElementById('navReflex').classList.add('active');
+            if (viewId === 'racerView') {
+                document.getElementById('navRacer').classList.add('active');
+                if (!racerInitialized) initRacer();
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // --- STOCK VIEWER LOGIC ---
+        function loadStock(symbol, name) {
+            const frame = document.getElementById("stockFrame");
+            frame.src = `https://s.tradingview.com/widgetembed/?symbol=${symbol}&interval=D&hidesidetoolbar=1&symboledit=1&saveimage=1&toolbarbg=111827&theme=dark&style=1&timezone=Asia/Kolkata`;
+        }
+
+        // --- IQ TESTER LOGIC ---
+        const iqQuestions = [
+            { q: "1. What number comes next in the sequence: 2, 4, 8, 16, 32, ___?", options: ["48", "64", "54", "60"], answer: 1 },
+            { q: "2. Which number completes the series: 3, 7, 15, 31, 63, ___?", options: ["127", "95", "110", "124"], answer: 0 },
+            { q: "3. Book is to Reading as Fork is to ___?", options: ["Kitchen", "Eating", "Spoon", "Cooking"], answer: 1 },
+            { q: "4. If all Bloops are Razzies and all Razzies are Lazzies, then all Bloops are definitely Lazzies.", options: ["True", "False", "Cannot be determined"], answer: 0 },
+            { q: "5. Find the odd one out: 27, 64, 125, 144, 216", options: ["27", "64", "144", "216"], answer: 2 },
+            { q: "6. Which word does NOT belong with the others?", options: ["Leopard", "Cheetah", "Tiger", "Elephant"], answer: 3 },
+            { q: "7. What is the next number: 1, 1, 2, 3, 5, 8, 13, ___?", options: ["18", "21", "24", "26"], answer: 1 },
+            { q: "8. A car travels 60 km in 45 minutes. What is its speed in km/h?", options: ["75 km/h", "80 km/h", "90 km/h", "100 km/h"], answer: 1 },
+            { q: "9. If CAT = 24 and DOG = 26, what is PIG?", options: ["32", "30", "36", "38"], answer: 0 },
+            { q: "10. Look at the series: 80, 10, 70, 15, 60, ___", options: ["20", "25", "50", "30"], answer: 0 }
+        ];
+
+        let currentIqIndex = 0, iqScore = 0, selectedOptionIndex = null;
+        let bestIqScore = localStorage.getItem("bestIqScore") || 0;
+        document.getElementById("bestIqScore").innerText = bestIqScore;
+
+        function startIqTest() {
+            currentIqIndex = 0; iqScore = 0;
+            document.getElementById("iqStartScreen").style.display = "none";
+            document.getElementById("iqResultScreen").style.display = "none";
+            document.getElementById("iqTestScreen").style.display = "block";
+            loadIqQuestion();
+        }
+
+        function loadIqQuestion() {
+            selectedOptionIndex = null;
+            document.getElementById("nextIqBtn").disabled = true;
+            const qData = iqQuestions[currentIqIndex];
+            document.getElementById("iqQuestionNum").innerText = currentIqIndex + 1;
+            document.getElementById("iqProgress").innerText = ((currentIqIndex + 1) * 10) + "%";
+            document.getElementById("iqQuestionBox").innerText = qData.q;
+
+            let optionsHTML = "";
+            qData.options.forEach((opt, idx) => {
+                optionsHTML += `<div class="iq-option" id="opt-${idx}" onclick="selectIqOption(${idx})"><span style="font-weight:bold; margin-right:10px;">${String.fromCharCode(65 + idx)}.</span> ${opt}</div>`;
+            });
+            document.getElementById("iqOptionsBox").innerHTML = optionsHTML;
+        }
+
+        function selectIqOption(idx) {
+            selectedOptionIndex = idx;
+            document.querySelectorAll('.iq-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('opt-' + idx).classList.add('selected');
+            document.getElementById("nextIqBtn").disabled = false;
+        }
+
+        function nextIqQuestion() {
+            if (selectedOptionIndex === iqQuestions[currentIqIndex].answer) iqScore++;
+            currentIqIndex++;
+            if (currentIqIndex < iqQuestions.length) loadIqQuestion();
+            else finishIqTest();
+        }
+
+        function finishIqTest() {
+            document.getElementById("iqTestScreen").style.display = "none";
+            document.getElementById("iqResultScreen").style.display = "block";
+            document.getElementById("iqScoreDisplay").innerText = iqScore + " / 10";
+            if (iqScore > bestIqScore) {
+                bestIqScore = iqScore;
+                localStorage.setItem("bestIqScore", bestIqScore);
+                document.getElementById("bestIqScore").innerText = bestIqScore;
+            }
+        }
+
+        // --- FLASHCARDS LOGIC ---
+        function getSentences() {
+            const text = document.getElementById('quizNotes').value.trim();
+            if(!text) return [];
+            return text.split(/(?<=[.?!])\s+/).filter(s => s.trim().length > 10);
+        }
+
+        function generateCards() {
+            const sentences = getSentences();
+            const output = document.getElementById('quizOutput');
+            if(sentences.length === 0) { output.innerHTML = "<p style='color:var(--danger); margin-top:15px;'>Please paste notes first!</p>"; return; }
+            let html = "<h3 style='margin-top:20px; font-size:16px;'>?? Flashcards Generated (" + sentences.length + "):</h3>";
+            sentences.forEach((sentence, index) => {
+                html += `<div class="card-item"><strong>Card ${index + 1}:</strong> Review Note<br><br><button class="btn" style="padding:5px 10px; font-size:12px;" onclick="toggleAnswer(${index})">Reveal / Hide</button><div id="ans-${index}" class="answer">${sentence}</div></div>`;
+            });
+            output.innerHTML = html;
+        }
+
+        function generateQuiz() {
+            const sentences = getSentences();
+            const output = document.getElementById('quizOutput');
+            if(sentences.length === 0) { output.innerHTML = "<p style='color:var(--danger); margin-top:15px;'>Please paste notes first!</p>"; return; }
+            let html = "<h3 style='margin-top:20px; font-size:16px;'>?? Practice Quiz:</h3>";
+            sentences.forEach((sentence, index) => {
+                let words = sentence.split(" ");
+                if(words.length > 4) {
+                    let keyIndex = Math.floor(words.length / 2);
+                    let hiddenWord = words[keyIndex].replace(/[.,?!]/g, "");
+                    words[keyIndex] = "<u>________</u>";
+                    html += `<div class="card-item"><strong>Question ${index + 1}:</strong> ${words.join(" ")}<br><br><button class="btn" style="padding:5px 10px; font-size:12px;" onclick="toggleAnswer(${index})">Show Answer</button><div id="ans-${index}" class="answer">Answer: "${hiddenWord}"</div></div>`;
+                }
+            });
+            output.innerHTML = html;
+        }
+
+        function toggleAnswer(id) {
+            const el = document.getElementById('ans-' + id);
+            el.style.display = (el.style.display === "block") ? "none" : "block";
+        }
+
+        // --- STUDY PLANNER LOGIC ---
+        function generateCustomPlan() {
+            const focus = document.getElementById('planFocus').value;
+            const studyH = parseFloat(document.getElementById('studyHours').value);
+            const sportH = parseFloat(document.getElementById('sportHours').value);
+            const output = document.getElementById('plannerOutput');
+            let tasks = [`03:30 PM - 04:00 PM: Snack & Relaxation`];
+            if (focus === 'sports') {
+                tasks.push(`04:00 PM - ${(4 + sportH).toFixed(2).replace('.',':')} PM: Badminton / Sports Training`);
+                tasks.push(`06:30 PM - ${(6.5 + studyH).toFixed(2).replace('.',':')} PM: Focused Study Block (${studyH} hrs)`);
+            } else {
+                tasks.push(`04:00 PM - ${(4 + studyH).toFixed(2).replace('.',':')} PM: Intensive Study (${studyH} hrs)`);
+                tasks.push(`07:30 PM - ${(7.5 + sportH).toFixed(2).replace('.',':')} PM: Outdoor Play / Sports (${sportH} hrs)`);
+            }
+            tasks.push(`08:30 PM: Dinner & Family Time`);
+
+            let html = `<div class="card-item" style="border-left-color: var(--success); margin-top:20px;"><h3 style="margin-top:0; font-size:16px;">Daily Schedule</h3>`;
+            tasks.forEach((t, i) => { html += `<div class="task-item"><input type="checkbox" id="t-${i}"><label for="t-${i}">${t}</label></div>`; });
+            html += `</div>`;
+            output.innerHTML = html;
+        }
+
+        // --- REFLEX TRAINER LOGIC ---
+        let reflexStartTime, reflexTimer;
+        let reflexState = "IDLE";
+        const reflexTarget = document.getElementById('reflexTarget');
+        const reflexResult = document.getElementById('reflexResult');
+
+        function startReflexGame() {
+            reflexResult.innerText = "";
+            reflexTarget.style.backgroundColor = "#ef4444";
+            reflexTarget.innerText = "Wait for GREEN...";
+            reflexState = "WAITING";
+            
+            let randomDelay = Math.floor(Math.random() * 3000) + 2000;
+            clearTimeout(reflexTimer);
+            
+            reflexTimer = setTimeout(() => {
+                if (reflexState === "WAITING") {
+                    reflexTarget.style.backgroundColor = "#10b981";
+                    reflexTarget.innerText = "CLICK NOW!";
+                    reflexStartTime = new Date().getTime();
+                    reflexState = "READY";
+                }
+            }, randomDelay);
+        }
+
+        function clickReflexTarget() {
+            if (reflexState === "WAITING") {
+                clearTimeout(reflexTimer);
+                reflexTarget.style.backgroundColor = "#1f2937";
+                reflexTarget.innerText = "Press Start";
+                reflexState = "IDLE";
+                reflexResult.style.color = "#ef4444";
+                reflexResult.innerText = "? False Start! You clicked too early!";
+            } else if (reflexState === "READY") {
+                let reactionTime = new Date().getTime() - reflexStartTime;
+                reflexTarget.style.backgroundColor = "#1f2937";
+                reflexTarget.innerText = "Press Start";
+                reflexState = "IDLE";
+                
+                if (reactionTime < 250) {
+                    reflexResult.style.color = "#10b981";
+                    reflexResult.innerText = `?? Lightning Fast! ${reactionTime} ms! Pro reflexes!`;
+                } else if (reactionTime < 400) {
+                    reflexResult.style.color = "#f59e0b";
+                    reflexResult.innerText = `?? Sharp Focus! ${reactionTime} ms response time!`;
+                } else {
+                    reflexResult.style.color = "#ef4444";
+                    reflexResult.innerText = `?? ${reactionTime} ms. A bit slow—try again!`;
+                }
+            }
+        }
+
+        // --- HIGHWAY RACER LOGIC ---
+        var canvas, ctx;
+        var playerX = 125, playerY = 280;
+        var obstacles = [];
+        var score = 0, speed = 5;
+        var gameOver = false;
+        var highScore = localStorage.getItem("racerHighScore") || 0;
+        var leftPressed = false, rightPressed = false;
+        var racerInitialized = false;
+
+        function initRacer() {
+            canvas = document.getElementById("gameCanvas");
+            ctx = canvas.getContext("2d");
+            document.getElementById("highScoreText").innerText = highScore;
+
+            document.addEventListener("keydown", function(e) {
+                if (e.keyCode === 37) leftPressed = true;
+                if (e.keyCode === 39) rightPressed = true;
+            });
+            document.addEventListener("keyup", function(e) {
+                if (e.keyCode === 37) leftPressed = false;
+                if (e.keyCode === 39) rightPressed = false;
+            });
+
+            racerInitialized = true;
+            racerGameLoop();
+        }
+
+        function spawnObstacle() {
+            var lanes = [20, 125, 230];
+            var randomX = lanes[Math.floor(Math.random() * lanes.length)];
+            var colors = ["#ef4444", "#10b981", "#f59e0b", "#3b82f6", "#a855f7"];
+            obstacles.push({ x: randomX, y: -60, color: colors[Math.floor(Math.random() * colors.length)] });
+        }
+
+        function racerGameLoop() {
+            if (gameOver || !racerInitialized) return;
+
+            ctx.fillStyle = "#1e293b";
+            ctx.fillRect(0, 0, 300, 360);
+
+            ctx.strokeStyle = "#ffffff";
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(100, 0); ctx.lineTo(100, 360);
+            ctx.moveTo(200, 0); ctx.lineTo(200, 360);
+            ctx.stroke();
+
+            if (leftPressed && playerX > 10) playerX -= 7;
+            if (rightPressed && playerX < 240) playerX += 7;
+
+            ctx.fillStyle = "#3b82f6";
+            ctx.fillRect(playerX, playerY, 50, 60);
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(playerX + 8, playerY + 10, 34, 18);
+
+            if (Math.random() < 0.035) {
+                if (obstacles.length === 0 || obstacles[obstacles.length - 1].y > 100) {
+                    spawnObstacle();
+                }
+            }
+
+            for (var i = 0; i < obstacles.length; i++) {
+                obstacles[i].y += speed;
+
+                ctx.fillStyle = obstacles[i].color;
+                ctx.fillRect(obstacles[i].x, obstacles[i].y, 50, 60);
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(obstacles[i].x + 8, obstacles[i].y + 32, 34, 18);
+
+                if (
+                    playerX < obstacles[i].x + 50 &&
+                    playerX + 50 > obstacles[i].x &&
+                    playerY < obstacles[i].y + 60 &&
+                    playerY + 60 > obstacles[i].y
+                ) {
+                    gameOver = true;
+                    if (score > highScore) {
+                        highScore = score;
+                        localStorage.setItem("racerHighScore", highScore);
+                        document.getElementById("highScoreText").innerText = highScore;
+                    }
+                }
+
+                if (obstacles[i].y > 360) {
+                    obstacles.splice(i, 1);
+                    score += 10;
+                    document.getElementById("scoreText").innerText = score;
+
+                    if (score % 40 === 0) {
+                        speed += 1.2;
+                        document.getElementById("speedText").innerText = Math.floor((speed - 5) / 1.2) + 1;
+                    }
+                }
+            }
+
+            if (gameOver) {
+                ctx.fillStyle = "rgba(0,0,0,0.85)";
+                ctx.fillRect(0, 0, 300, 360);
+                
+                ctx.fillStyle = "#ef4444";
+                ctx.font = "bold 24px Arial";
+                ctx.fillText("CRASHED!", 85, 140);
+                
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "15px Arial";
+                ctx.fillText("Final Score: " + score, 100, 180);
+                
+                if (score >= highScore) {
+                    ctx.fillStyle = "#f59e0b";
+                    ctx.fillText("?? NEW HIGH SCORE! ??", 55, 215);
+                }
+            } else {
+                setTimeout(racerGameLoop, 1000 / 45);
+            }
+        }
+
+        function restartRacer() {
+            playerX = 125;
+            obstacles = [];
+            score = 0;
+            speed = 5;
+            gameOver = false;
+            document.getElementById("scoreText").innerText = 0;
+            document.getElementById("speedText").innerText = 1;
+            racerGameLoop();
+        }
+    </script>
+</body>
+</html>
